@@ -5,12 +5,18 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: "jsdom",
-    globals: true,
-    setupFiles: ["./vitest.setup.ts"],
-    pool: "threads",
+    environment: "jsdom", // Use jsdom for testing React components
+    globals: true,  // Enable global variables like `describe`, `it`, etc.
+    setupFiles: ["./vitest.setup.ts"],  // Path to setup file for test environment configuration
+    pool: "threads",  // Use threads for test execution
+    exclude: [  //
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/tests/**",
+      "**/*.spec.ts",
+    ],
   },
-  resolve: {
+  resolve: {  // Set up path alias for cleaner imports
     alias: { "@": path.resolve(__dirname, "./") },
   },
 });

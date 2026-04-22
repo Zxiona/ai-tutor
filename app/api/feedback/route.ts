@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(req: Request) {
+
+    // try-catch to handle errors and return them to the client
     try {
         // Auth check
         const supabase = await createClient();
@@ -27,6 +29,7 @@ export async function POST(req: Request) {
         );
         }
 
+        // This instruction is what guides the AI's feedback style and content.
         const systemInstruction =
         "You are a patient, encouraging programming tutor for beginners. " +
         "When reviewing student code: (1) note what they did well, " +
