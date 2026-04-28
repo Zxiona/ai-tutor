@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Circle, ArrowRight } from "lucide-react";
 import LessonsAnimations from "./lessons-animations";
 
-export const dynamic = "force-dynamic";
-
 export default async function LessonsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
