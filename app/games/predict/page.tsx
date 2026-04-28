@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PredictGame from "./predict-game";
 
+export const dynamic = "force-dynamic";
+
 export default async function PredictPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

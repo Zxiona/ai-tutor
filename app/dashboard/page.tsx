@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress";
 import { BookOpen, Gamepad2, Trophy, Flame, Zap, Target, CheckCircle2, XCircle } from "lucide-react";
 import DashboardAnimations from "./dashboard-animations";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
