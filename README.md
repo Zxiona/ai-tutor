@@ -1,109 +1,221 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# PyTutor 🐍
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+> An AI-assisted Python tutor with gamified mini-games, in-browser code execution, and intelligent feedback.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres-green?logo=supabase)](https://supabase.com)
+[![Anthropic](https://img.shields.io/badge/AI-Claude-orange)](https://www.anthropic.com)
+
+PyTutor is a final-year Software Engineering project (UWE Bristol, UFCFFF-30-3) that combines bite-sized Python lessons, an in-browser Python runtime, and an AI tutor that gives hints rather than answers. Progress is gamified through XP, levels, daily streaks, and a public leaderboard.
+
+🔗 **Live demo:** [url-vercel.app](https://)
+
+---
+
+## Why this exists
+
+Programming is famously hard to start — the gap between "I want to learn Python" and "I know what to type next" is where most beginners give up. Existing platforms either dump you into long passive videos or punish you with cryptic compiler errors and no help. PyTutor sits in the middle: short focused lessons, instant code execution, and an AI tutor that points you in the right direction without solving the problem for you.
 
 ## Features
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+- **In-browser Python execution** via Pyodide (CPython compiled to WebAssembly) — no installs, no server-side sandboxing, runs at near-native speed.
+- **AI tutor** powered by Claude (Anthropic) — gives Socratic hints rather than direct solutions.
+- **8 progressive Python lessons** covering basics, functions, loops, lists, strings, and recursion.
+- **Two mini-games:**
+  - *Output Predictor* — read code, predict what it prints.
+  - *Debug the Snippet* — find and fix the bug.
+- **Gamification:** XP rewards, level system, daily streaks, top-20 leaderboard.
+- **Auto-grading** — student output is normalised and compared to expected output.
+- **Authentication** with email confirmation via Supabase Auth.
+- **Three deployment environments** — local, preview (per-PR), production.
+- **CI pipeline** running lint, typecheck, and unit tests on every push.
 
-## Demo
+## Tech stack
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+| Layer | Choice | Why |
+|---|---|---|
+| Framework | Next.js 16 (App Router) + TypeScript | Single codebase for UI and API routes; current LTS |
+| Styling | Tailwind CSS v4 | Industry standard; zero custom CSS needed |
+| UI components | shadcn/ui | Code-owned components — no version lock-in |
+| Icons | Lucide | Tree-shakable line icons designed for Tailwind |
+| Animation | Motion (formerly Framer Motion) | 120fps Web Animations API engine |
+| Code editor | Monaco Editor | The same editor VS Code uses |
+| Python runtime | Pyodide 0.29 | CPython on WebAssembly, runs entirely client-side |
+| Database & auth | Supabase (Postgres + Auth) | Free tier; row-level security |
+| AI | Anthropic Claude (Haiku 4.5) | Stronger Socratic-tutoring behaviour than alternatives tested |
+| Deployment | Vercel | Free preview deployments per PR |
+| Unit tests | Vitest | Fast; native TypeScript; jsdom |
+| E2E tests | Playwright | Cross-browser; works in CI |
+| CI | GitHub Actions | Runs on every push to `main` and `dev` |
 
-## Deploy to Vercel
+## Architecture
 
-Vercel deployment will guide you through creating a Supabase account and project.
+```
+                ┌─────────────────────────────────────┐
+                │  Browser (Next.js App Router)       │
+                │  ┌───────────────┐  ┌────────────┐  │
+                │  │ Monaco Editor │  │  Pyodide   │  │
+                │  │ (user input)  │  │  (WASM)    │  │
+                │  └───────────────┘  └────────────┘  │
+                └────────┬─────────────────┬──────────┘
+                         │                 │
+                         │ /api/feedback   │ /api/submit
+                         │ /api/games/*    │
+                         ▼                 ▼
+                ┌──────────────────────────────────┐
+                │  Next.js API Routes (Edge/Node)  │
+                └────────┬─────────────────┬───────┘
+                         │                 │
+                         ▼                 ▼
+                ┌─────────────────┐  ┌─────────────────┐
+                │  Anthropic API  │  │  Supabase       │
+                │  (Claude)       │  │  (Postgres+Auth)│
+                └─────────────────┘  └─────────────────┘
+```
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+User code never leaves the browser — it executes in WebAssembly inside the user's tab. Only the *output* and the user's request for feedback are sent to the server.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+## Project structure
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+```
+ai-tutor/
+├── app/
+│   ├── api/
+│   │   ├── feedback/route.ts     # Claude AI feedback endpoint
+│   │   ├── submit/route.ts       # Auto-grading + XP + streak logic
+│   │   └── games/award/route.ts  # Mini-game XP awards
+│   ├── auth/                     # Login, signup, password reset
+│   ├── dashboard/                # User stats, level, recent activity
+│   ├── lessons/                  # Lessons list and detail pages
+│   ├── games/                    # Predict and Debug mini-games
+│   ├── leaderboard/              # Top 20 by XP
+│   └── layout.tsx                # Root layout with sticky nav
+├── components/
+│   ├── ui/                       # shadcn/ui components
+│   ├── code-editor.tsx           # Monaco wrapper
+│   └── nav-link.tsx              # Animated active-page indicator
+├── lib/
+│   ├── pyodide-runner.ts         # Pyodide loader and runPython()
+│   ├── xp.ts                     # Level calculation
+│   └── supabase/                 # Server and browser clients
+├── tests/                        # Playwright E2E tests
+├── lib/__tests__/                # Vitest unit tests
+└── .github/workflows/ci.yml      # Lint + typecheck + tests
+```
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+## Database schema
 
-## Clone and run locally
+```
+profiles                   lessons                  attempts
+─────────                  ─────────                ─────────
+id (uuid, FK auth.users)   id                       id
+username                   slug                     user_id (FK)
+xp                         title                    lesson_id (FK)
+current_streak             difficulty               code
+longest_streak             topic                    passed
+last_active_date           prompt                   ai_feedback
+                           starter_code             created_at
+                           expected_output
+                           xp_reward
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+game_challenges
+─────────────────
+id
+game_type (predict|debug)
+difficulty
+code | broken_code
+expected_output
+xp_reward
+```
 
-2. Create a Next.js app using the Supabase Starter template npx command
+Row-level security policies ensure users can only read/write their own attempts and profile, while lessons and challenges are world-readable.
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+## Running locally
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+### Prerequisites
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+- Node.js 20+
+- A Supabase project ([sign up free](https://supabase.com))
+- An Anthropic API key ([console.anthropic.com](https://console.anthropic.com))
 
-3. Use `cd` to change into the app's directory
+### Setup
 
-   ```bash
-   cd with-supabase-app
-   ```
+```bash
+# Clone and install
+git clone https://github.com/your-username/ai-tutor.git
+cd ai-tutor
+npm install
 
-4. Rename `.env.example` to `.env.local` and update the following:
+# Set up environment variables
+cp .env.example .env.local
+```
 
-  ```env
-  NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
-  ```
-  > [!NOTE]
-  > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-  > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-  > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
+Fill in `.env.local`:
 
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+ANTHROPIC_API_KEY=sk-ant-...
+```
 
-5. You can now run the Next.js local development server:
+Run the SQL migration scripts in `db/schema.sql` against your Supabase project (via the SQL Editor in the dashboard) to create the tables and seed the lessons.
 
-   ```bash
-   npm run dev
-   ```
+### Develop
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+```bash
+npm run dev          # Starts dev server at localhost:3000
+npm test             # Runs Vitest unit tests
+npx playwright test  # Runs Playwright E2E tests (requires npm run dev in another terminal)
+npm run build        # Production build
+```
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+## Deployment
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+The project deploys to Vercel automatically:
 
-## Feedback and issues
+- Pushes to `main` → production.
+- Pushes to any other branch → preview deployment with its own URL.
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+Required environment variables on Vercel: the same three from `.env.local`. Once Supabase Auth is configured, add the production URL to **Auth → URL Configuration** in the Supabase dashboard so confirmation emails redirect correctly.
 
-## More Supabase examples
+## Testing strategy
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+- **Unit tests** (Vitest) cover deterministic logic like XP-to-level conversion. Each test references a requirement ID (e.g. `[REQ-XP-01]`) for traceability back to the requirements specification.
+- **End-to-end tests** (Playwright) cover critical user flows: signup, lesson submission, leaderboard view.
+- **CI** runs all of the above on every push and PR via GitHub Actions.
+
+## Academic context
+
+This project was developed for **UFCFFF-30-3 Computer Science Project** at the University of the West of England, Bristol (2025/26 academic year). It is assessed as two deliverables: a 6,000-word technical report and a 20-minute video demonstration plus degree-show poster.
+
+The project is supervised by Sami Abuezhayeh, with Steve Battle as module leader.
+
+### Mapping to assessment criteria
+
+- **Deployed application with evidence of a user-base** — Live on Vercel; sign-ups tracked in Supabase profiles table.
+- **Different environments for development, testing, and production** — Local (`npm run dev`), Vercel preview (per branch), Vercel production (main).
+- **Configuration management** — Conventional Commits on `main`/`dev` branches; CI status checks; environment-specific secrets via Vercel.
+- **Thorough testing with traceability** — Each test references a requirement ID; CI enforces tests pass.
+- **Analysis of technology options and risks** — Pyodide vs. server-side Piston (chose Pyodide for sandboxing/cost); Anthropic vs. Gemini (chose Claude for tutoring quality); Next.js App Router vs. separate backend (chose monorepo for delivery speed).
+
+## Privacy and data
+
+- User code is executed entirely in the browser via WebAssembly — it is not transmitted to any server.
+- The user's *request for AI feedback* sends the code, problem prompt, and program output to Anthropic's API for the duration of one request. Anthropic does not retain this data for training under their consumer terms.
+- User accounts store only an email, a derived username, XP totals, and streaks. No personal data beyond what is required for authentication.
+- Cookies are limited to authentication session tokens issued by Supabase.
+
+## Licence
+
+MIT — see [LICENSE](LICENSE).
+
+This project was built as part of an undergraduate dissertation. Code is provided for academic and educational reference. Lesson content is original.
+
+## Acknowledgements
+
+- **Pyodide team** for porting CPython to WebAssembly.
+- **shadcn** for the component-ownership philosophy that powers the UI layer.
+- **Anthropic** for the Claude API and free student credits.
+- **Supabase** for the open-source Firebase alternative.
+- **Sami Abuezhayeh** (project supervisor) and **Steve Battle** (module leader) for guidance throughout the project.
