@@ -7,7 +7,11 @@ on:
     branches: [main, dev]
 
 jobs:
+<<<<<<< HEAD
+  test:
+=======
   unit:
+>>>>>>> main
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,6 +22,9 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npx tsc --noEmit
+<<<<<<< HEAD
+      - run: npm test
+=======
       - run: npm test
 
   e2e:
@@ -35,3 +42,4 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+>>>>>>> main
