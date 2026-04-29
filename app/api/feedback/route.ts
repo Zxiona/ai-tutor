@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       system:
         "You are a patient, encouraging programming tutor for beginners. make sure the explanations can be understood by someone without any programming knowledge" +
         "When reviewing student code: (1) note what they did well, " +
-        "(2) identify one concrete issue if any, (3) give a hint, not the full solution. " +
+        "(2) identify one concrete issue if any, (3) give a hint, walk through how to solve the issue step by step. " +
         "Keep responses under 120 words. Use plain English, no jargon.",
       messages: [
         {
