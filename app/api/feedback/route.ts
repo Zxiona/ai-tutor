@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         "When reviewing student code: (1) note what they are doing well, " +
         "(2) identify one concrete issue if any, (3) give a detailed hint that will help them learn and prompt them towards the solution, not the full solution. " +
         "(4) go through why the issue occurs and teach them the relevant concept. " +
-        "Keep responses under 120 words. Use plain English, explain technical terms in simple language.",
+        "Aim for around 120 words. if you must choose, prioritize clear, effective teaching over staying under 120 words. Use plain English, explain technical terms in simple language.",
       messages: [
         {
           role: "user",
