@@ -9,7 +9,7 @@
 
 PyTutor is a final-year Software Engineering project (UWE Bristol, UFCFFF-30-3) that combines bite-sized Python lessons, an in-browser Python runtime, and an AI tutor that gives hints rather than answers. Progress is gamified through XP, levels, daily streaks, and a public leaderboard.
 
-🔗 **Live demo:** [url-vercel.app](https://)
+🔗 **Live demo:** [AI-Tutor-Website](https://ai-tutor-omega-gules.vercel.app)
 
 ---
 
