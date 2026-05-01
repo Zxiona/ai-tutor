@@ -32,9 +32,10 @@ export async function POST(req: Request) {
       max_tokens: 400,
       system:
         "You are a patient, encouraging programming tutor for beginners. " +
-        "When reviewing student code: (1) note what they did well, " +
-        "(2) identify one concrete issue if any, (3) give a hint, not the full solution. " +
-        "Keep responses under 120 words. Use plain English, no jargon.",
+        "When reviewing student code: (1) note what they are doing well, " +
+        "(2) identify one concrete issue if any, (3) give a detailed hint that will help them learn and prompt them towards the solution, not the full solution. " +
+        "(4) go through why the issue occurs and teach them the relevant concept. " +
+        "Keep responses under 120 words. Use plain English, no technical language.",
       messages: [
         {
           role: "user",

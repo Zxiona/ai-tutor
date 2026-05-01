@@ -74,8 +74,8 @@ export async function POST(req: Request) {
           (todayDate.getTime() - last.getTime()) / 86400000
         );
         if (diffDays === 0) newStreak = profile.current_streak; // already active today
-        else if (diffDays === 1) newStreak = profile.current_streak + 1;
-        else newStreak = 1;
+        else if (diffDays === 1) newStreak = profile.current_streak + 1; // consecutive
+        else newStreak = 1;                                              // reset streak
       }
 
       const newLongest = Math.max(
