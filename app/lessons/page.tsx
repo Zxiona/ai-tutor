@@ -7,23 +7,26 @@ import { CheckCircle2, Circle, ArrowRight } from "lucide-react";
 import LessonsAnimations from "./lessons-animations";
 
 export default async function LessonsPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/auth/login");
+  const supabase = await createClient();                  // Create a Supabase client that can run server-side
+  const { data: { user } } = await supabase.auth.getUser(); // Get the currently authenticated user
+  if (!user) redirect("/auth/login");                       // If no user is authenticated, redirect to the login page
 
+  // Fetch all lessons from the database, selecting only the fields we need
   const { data: lessons } = await supabase
     .from("lessons")
     .select("id, slug, title, difficulty, topic, xp_reward")
     .order("id", { ascending: true });
 
+  // Fetch all passed attempts for the current user to determine which lessons they've completed
   const { data: passed } = await supabase
     .from("attempts")
     .select("lesson_id")
     .eq("user_id", user.id)
     .eq("passed", true);
 
-  const completedIds = new Set((passed ?? []).map((a) => a.lesson_id));
+  const completedIds = new Set((passed ?? []).map((a) => a.lesson_id)); // Create a set of completed lesson IDs for easy lookup
 
+  // Map lesson difficulties to badge variants for consistent styling
   const difficultyVariant: Record<
     string,
     "default" | "secondary" | "destructive" | "outline"

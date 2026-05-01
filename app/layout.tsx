@@ -5,6 +5,7 @@ import { NavLink } from "@/components/nav-link";
 import "./globals.css";
 import Link from "next/link";
 
+// Set the base URL for metadata to ensure correct Open Graph tags and other metadata generation, especially when deployed on Vercel.
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";

@@ -83,6 +83,7 @@ export async function POST(req: Request) {
         newStreak
       );
 
+      // Update the profile with new XP and streak info
       await supabase
         .from("profiles")
         .update({
@@ -94,6 +95,7 @@ export async function POST(req: Request) {
         .eq("id", user.id);
     }
 
+    // Return the result of the attempt and XP awarded
     return NextResponse.json({ passed, xpAwarded });
   } catch (e) {
     console.error("[/api/submit] error:", e);
