@@ -26,15 +26,16 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
-
+    // Claude API prompt
     const message = await client.messages.create({
       model: "claude-haiku-4-5",
       max_tokens: 400,
       system:
-        "You are a patient, encouraging programming tutor for beginners. make sure the explanations can be understood by someone without any programming knowledge" +
-        "When reviewing student code: (1) note what they did well, " +
-        "(2) identify one concrete issue if any, (3) give a hint, walk through how to solve the issue step by step. " +
-        "Keep responses under 120 words. Use plain English, no jargon.",
+        "You are a patient, encouraging programming tutor for beginners. " +
+        "When reviewing student code: (1) note what they are doing well, " +
+        "(2) identify one concrete issue if any, (3) give a detailed hint that will help them learn and prompt them towards the solution, not the full solution. " +
+        "(4) go through why the issue occurs and teach them the relevant concept. " +
+        "Aim for around 120 words. if you must choose, prioritize clear, effective teaching over staying under 120 words. Use plain English, explain technical terms in simple language.",
       messages: [
         {
           role: "user",
@@ -55,6 +56,7 @@ Please give feedback.`,
       ],
     });
 
+    // Extract just the text blocks and join them
     const text = message.content
       .filter((b): b is Anthropic.TextBlock => b.type === "text")
       .map((b) => b.text)

@@ -2,13 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PredictGame from "./predict-game";
 
-export const dynamic = "force-dynamic";
-
 export default async function PredictPage() {
+  // Create a Supabase client that can run server-side
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/login");
 
+  // Fetch all "predict" game challenges from the database
   const { data: challenges } = await supabase
     .from("game_challenges")
     .select("id, code, expected_output, xp_reward, difficulty")

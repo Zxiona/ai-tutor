@@ -7,10 +7,12 @@ import { Trophy, Flame, Medal } from "lucide-react";
 import LeaderboardAnimations from "./leaderboard-animations";
 
 export default async function LeaderboardPage() {
+  // Create a Supabase client that can run server-side
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/login");
 
+  // Fetch top 20 profiles by XP to display on the leaderboard
   const { data: top } = await supabase
     .from("profiles")
     .select("id, username, xp, current_streak")

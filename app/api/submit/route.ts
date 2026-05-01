@@ -74,8 +74,8 @@ export async function POST(req: Request) {
           (todayDate.getTime() - last.getTime()) / 86400000
         );
         if (diffDays === 0) newStreak = profile.current_streak; // already active today
-        else if (diffDays === 1) newStreak = profile.current_streak + 1;
-        else newStreak = 1;
+        else if (diffDays === 1) newStreak = profile.current_streak + 1; // consecutive
+        else newStreak = 1;                                              // reset streak
       }
 
       const newLongest = Math.max(
@@ -83,6 +83,7 @@ export async function POST(req: Request) {
         newStreak
       );
 
+      // Update the profile with new XP and streak info
       await supabase
         .from("profiles")
         .update({
@@ -94,6 +95,7 @@ export async function POST(req: Request) {
         .eq("id", user.id);
     }
 
+    // Return the result of the attempt and XP awarded
     return NextResponse.json({ passed, xpAwarded });
   } catch (e) {
     console.error("[/api/submit] error:", e);

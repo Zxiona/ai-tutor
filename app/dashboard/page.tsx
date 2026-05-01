@@ -10,16 +10,19 @@ import { BookOpen, Gamepad2, Trophy, Flame, Zap, Target, CheckCircle2, XCircle }
 import DashboardAnimations from "./dashboard-animations";
 
 export default async function DashboardPage() {
+  // Create a Supabase client that can run server-side
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/login");
 
+  // Fetch the user's profile to get XP, streaks, etc.
   const { data: profile } = await supabase
     .from("profiles")
     .select("username, xp, current_streak, longest_streak")
     .eq("id", user.id)
     .single();
 
+  // Fetch recent attempts to show activity on the dashboard
   const { data: recent } = await supabase
     .from("attempts")
     .select("id, passed, created_at, lessons(title, slug)")
@@ -27,6 +30,7 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(5);
 
+  // Calculate level and progress based on XP
   const xp = profile?.xp ?? 0;
   const level = levelForXp(xp);
   const xpInLevel = xpInCurrentLevel(xp);
